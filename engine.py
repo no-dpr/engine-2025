@@ -622,19 +622,15 @@ class Game:
         Incorporates TerminalState information into the game log and player messages.
         """
         previous_state = round_state.previous_state
-        if FoldAction not in previous_state.legal_actions():
-            self.log.append(
-                "{} shows {}".format(players[0].name, PCARDS(previous_state.hands[0]))
-            )
-            self.log.append(
-                "{} shows {}".format(players[1].name, PCARDS(previous_state.hands[1]))
-            )
-            self.player_messages[0].append("O" + CCARDS(previous_state.hands[1]))
-            self.player_messages[1].append("O" + CCARDS(previous_state.hands[0]))
-        self.log.append("{} awarded {}".format(players[0].name, round_state.deltas[0]))
-        self.log.append("{} awarded {}".format(players[1].name, round_state.deltas[1]))
-        self.player_messages[0].append("D" + str(round_state.deltas[0]))
-        self.player_messages[1].append("D" + str(round_state.deltas[1]))
+        if not self.log[-1].endswith(' folds'):
+            self.log.append('{} shows {}'.format(players[0].name, PCARDS(previous_state.hands[0])))
+            self.log.append('{} shows {}'.format(players[1].name, PCARDS(previous_state.hands[1])))
+            self.player_messages[0].append('O' + CCARDS(previous_state.hands[1]))
+            self.player_messages[1].append('O' + CCARDS(previous_state.hands[0]))
+        self.log.append('{} awarded {}'.format(players[0].name, round_state.deltas[0]))
+        self.log.append('{} awarded {}'.format(players[1].name, round_state.deltas[1]))
+        self.player_messages[0].append('D' + str(round_state.deltas[0]))
+        self.player_messages[1].append('D' + str(round_state.deltas[1]))
 
         # figure out win/chop, bounty hit, and update logs accordingly
         # if round_state.bounty_hits[0]:
