@@ -55,7 +55,7 @@ public class Player implements Bot {
         // int street = previousState.street;  // 0, 3, 4, or 5 representing when this round ended
         // List<String> myCards = previousState.hands.get(active);  // your cards
         // List<String> oppCards = previousState.hands.get(1-active);  // opponent's cards or "" if not revealed
-        
+
         Boolean myBountyHit = terminalState.bounty_hits.get(active);  // if your bounty hit this round
         Boolean oppBountyHit = terminalState.bounty_hits.get(1-active);  // if opponent's bounty hit this round
 

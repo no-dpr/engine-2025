@@ -43,7 +43,7 @@ public class RoundState extends State {
     }
 
     /**
-     * Gets player bounty hits (described inside function) 
+     * Gets player bounty hits (described inside function)
      */
     List<Boolean> get_bounty_hits()
     {

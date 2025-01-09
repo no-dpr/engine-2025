@@ -17,4 +17,4 @@ struct Action {
   friend std::ostream &operator<<(std::ostream &os, const Action &a);
 };
 
-} // namespace pokerbots::skeleton
+}  // namespace pokerbots::skeleton

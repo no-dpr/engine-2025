@@ -259,7 +259,10 @@ class Player(Bot):
         self.new_message += " " + poss_actions[:-2] + "."
 
         if RaiseAction in legal_actions:
-            min_raise, max_raise = (
+            (
+                min_raise,
+                max_raise,
+            ) = (
                 round_state.raise_bounds()
             )  # the smallest and largest numbers of chips for a legal bet/raise
             min_cost = min_raise - my_pip  # the cost of a minimum bet/raise
