@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
     "cmake.sourceDirectory": "/Users/dominicperno/Projects/Pokerbots/engine-2025/cpp_skeleton",
     "C_Cpp.errorSquiggles": "disabled",
@@ -64,3 +65,9 @@
         "algorithm": "cpp"
     }
 }
+||||||| parent of db96e5d (Initialized repo)
+=======
+{
+    "cmake.sourceDirectory": "/Users/dominicperno/Projects/Pokerbots/engine-2025/cpp_skeleton"
+}
+>>>>>>> db96e5d (Initialized repo)

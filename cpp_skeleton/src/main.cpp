@@ -10,6 +10,10 @@
 using namespace pokerbots::skeleton;
 
 struct Bot {
+ private:
+  bool strongHole;
+
+ public:
   /*
     Called when a new round starts. Called NUM_ROUNDS times.
 
@@ -19,6 +23,7 @@ struct Bot {
   */
   void handleNewRound(GameInfoPtr gameState, RoundStatePtr roundState,
                       int active) {
+<<<<<<< HEAD
     // int myBankroll = gameState->bankroll;  // the total number of chips
     // you've gained or lost from the beginning of the game to the start of this
     // round float gameClock = gameState->gameClock;  // the total number of
@@ -40,6 +45,23 @@ struct Bot {
     std::string bestRank = "AKQJ";
 
     if (rank1 == rank2 || (bestRank)) }
+||||||| parent of db96e5d (Initialized repo)
+    // int myBankroll = gameState->bankroll;  // the total number of chips you've gained or lost from the beginning of the game to the start of this round 
+    // float gameClock = gameState->gameClock;  // the total number of seconds your bot has left to play this game 
+    // int roundNum = gameState->roundNum;  // the round number from 1 to State.NUM_ROUNDS 
+    // auto myCards = roundState->hands[active];  // your cards 
+    // bool bigBlind = (active == 1);  // true if you are the big blind
+  }
+=======
+    // int myBankroll = gameState->bankroll;  // the total number of chips
+    // you've gained or lost from the beginning of the game to the start of this
+    // round float gameClock = gameState->gameClock;  // the total number of
+    // seconds your bot has left to play this game int roundNum =
+    // gameState->roundNum;  // the round number from 1 to State.NUM_ROUNDS auto
+    // myCards = roundState->hands[active];  // your cards bool bigBlind =
+    // (active == 1);  // true if you are the big blind
+  }
+>>>>>>> db96e5d (Initialized repo)
 
   /*
     Called when a round ends. Called NUM_ROUNDS times.
@@ -94,6 +116,7 @@ struct Bot {
   Action getAction(GameInfoPtr gameState, RoundStatePtr roundState,
                    int active) {
     auto legalActions =
+<<<<<<< HEAD
         roundState->legalActions();   // the actions you are allowed to take
     int street = roundState->street;  // 0, 3, 4, or 5 representing pre-flop,
                                       // flop, turn, or river respectively
@@ -118,14 +141,64 @@ struct Bot {
         STARTING_STACK - oppStack;  // the number of chips your opponent has
                                     // contributed to the pot
     char myBounty = roundState->bounties[active];  // your current bounty rank
+||||||| parent of db96e5d (Initialized repo)
+        roundState->legalActions(); // the actions you are allowed to take
+    int street = roundState->street;  // 0, 3, 4, or 5 representing pre-flop, flop, turn, or river respectively
+    auto myCards = roundState->hands[active];  // your cards 
+    auto boardCards = roundState->deck;  // the board cards 
+    int myPip = roundState->pips[active];  // the number of chips you have contributed to the pot this round of betting 
+    int oppPip = roundState->pips[1-active]; // the number of chips your opponent has contributed to the pot this round of betting 
+    int myStack = roundState->stacks[active];  // the number of chips you have remaining 
+    int oppStack = roundState->stacks[1-active];  // the number of chips your opponent has remaining 
+    int continueCost = oppPip - myPip;  // the number of chips needed to stay in the pot
+    int myContribution = STARTING_STACK - myStack;  // the number of chips you have contributed to the pot 
+    int oppContribution = STARTING_STACK - oppStack;  // the number of chips your opponent has contributed to the pot
+    char myBounty = roundState->bounties[active];  // your current bounty rank 
+=======
+        roundState->legalActions();   // the actions you are allowed to take
+    int street = roundState->street;  // 0, 3, 4, or 5 representing pre-flop,
+                                      // flop, turn, or river respectively
+    auto myCards = roundState->hands[active];  // your cards
+    auto boardCards = roundState->deck;        // the board cards
+    int myPip =
+        roundState->pips[active];  // the number of chips you have contributed
+                                   // to the pot this round of betting
+    int oppPip =
+        roundState
+            ->pips[1 - active];  // the number of chips your opponent has
+                                 // contributed to the pot this round of betting
+    int myStack =
+        roundState->stacks[active];  // the number of chips you have remaining
+    int oppStack = roundState->stacks[1 - active];  // the number of chips your
+                                                    // opponent has remaining
+    int continueCost =
+        oppPip - myPip;  // the number of chips needed to stay in the pot
+    int myContribution =
+        STARTING_STACK -
+        myStack;  // the number of chips you have contributed to the pot
+    int oppContribution =
+        STARTING_STACK - oppStack;  // the number of chips your opponent has
+                                    // contributed to the pot
+    char myBounty = roundState->bounties[active];  // your current bounty rank
+>>>>>>> db96e5d (Initialized repo)
 
     int minCost = 0, maxCost = 0;
     std::array<int, 2> raiseBounds = {0, 0};
     if (legalActions.find(Action::Type::RAISE) != legalActions.end()) {
+<<<<<<< HEAD
       raiseBounds =
           roundState->raiseBounds();     // the smallest and largest numbers
                                          // of chips for a legal bet/raise
       minCost = raiseBounds[0] - myPip;  // the cost of a minimum bet/raise
+||||||| parent of db96e5d (Initialized repo)
+      raiseBounds = roundState->raiseBounds();  // the smallest and largest numbers of chips for a legal bet/raise 
+      minCost = raiseBounds[0] - myPip;  // the cost of a minimum bet/raise 
+=======
+      raiseBounds =
+          roundState->raiseBounds();     // the smallest and largest numbers of
+                                         // chips for a legal bet/raise
+      minCost = raiseBounds[0] - myPip;  // the cost of a minimum bet/raise
+>>>>>>> db96e5d (Initialized repo)
       maxCost = raiseBounds[1] - myPip;  // the cost of a maximum bet/raise
     }
 
