@@ -12,7 +12,7 @@ import random
 
 class Player(Bot):
     """
-    A pokerbot.
+    A pokesrbot.
     """
 
     def __init__(self):
