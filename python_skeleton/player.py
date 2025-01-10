@@ -42,10 +42,16 @@ class Player(Bot):
         # my_bankroll = game_state.bankroll  # the total number of chips you've gained or lost from the beginning of the game to the start of this round
         # game_clock = game_state.game_clock  # the total number of seconds your bot has left to play this game
         # round_num = game_state.round_num  # the round number from 1 to NUM_ROUNDS
-        # my_cards = round_state.hands[active]  # your cards
+        my_cards = round_state.hands[active]  # your cards
         # big_blind = bool(active)  # True if you are the big blind
         # my_bounty = round_state.bounties[active]  # your current bounty rank
-        pass
+
+        rank1 = my_cards[0][0]
+        suit1 = my_cards[0][1]
+        rank2 = my_cards[0][1]
+        suit2 = my_cards[1][1]
+
+        self.strong_hole = rank1 == rank2 or (rank1 in "AKQJ" and rank2 in "AKQJ")
 
     def handle_round_over(self, game_state, terminal_state, active):
         """
@@ -123,6 +129,11 @@ class Player(Bot):
             STARTING_STACK - opp_stack
         )  # the number of chips your opponent has contributed to the pot
 
+        raise_prob = 0.8
+        raise_percent = 0.1
+        bluff_prob = 0.5
+        fold_prob = 0.25
+
         if RaiseAction in legal_actions:
             (
                 min_raise,
@@ -130,14 +141,26 @@ class Player(Bot):
             ) = (
                 round_state.raise_bounds()
             )  # the smallest and largest numbers of chips for a legal bet/raise
+
             min_cost = min_raise - my_pip  # the cost of a minimum bet/raise
             max_cost = max_raise - my_pip  # the cost of a maximum bet/raise
+        if self.strong_hole:
+            if RaiseAction in legal_actions:
+                for card in my_cards + board_cards:
+                    if card[0] == my_bounty:
+                        return RaiseAction(max_raise)
+
+                raise_amt = int(min_raise + (max_raise - min_raise) * raise_percent)
+
+                if random.random() < raise_prob:
+                    return RaiseAction(raise_amt)
+
         if RaiseAction in legal_actions:
-            if random.random() < 0.5:
+            if random.random() < bluff_prob:
                 return RaiseAction(min_raise)
         if CheckAction in legal_actions:  # check-call
             return CheckAction()
-        if random.random() < 0.25:
+        if random.random() < fold_prob and not self.strong_hole:
             return FoldAction()
         return CallAction()
 

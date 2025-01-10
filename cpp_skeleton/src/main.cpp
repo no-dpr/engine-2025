@@ -10,10 +10,6 @@
 using namespace pokerbots::skeleton;
 
 struct Bot {
- private:
-  bool strongHole;
-
- public:
   /*
     Called when a new round starts. Called NUM_ROUNDS times.
 
@@ -27,10 +23,23 @@ struct Bot {
     // you've gained or lost from the beginning of the game to the start of this
     // round float gameClock = gameState->gameClock;  // the total number of
     // seconds your bot has left to play this game int roundNum =
-    // gameState->roundNum;  // the round number from 1 to State.NUM_ROUNDS auto
-    // myCards = roundState->hands[active];  // your cards bool bigBlind =
-    // (active == 1);  // true if you are the big blind
-  }
+    // gameState->roundNum;  // the round number from 1 to State.NUM_ROUNDS
+    auto myCards = roundState->hands[active];  // your cards
+    // bool bigBlind = (active == 1);  // true if you are the big blind
+
+    this->strongHole = false;
+
+    std::array<std::string, 2> card1 = myCards[0];
+    std::array<std::string, 2> card2 = myCards[1];
+
+    std::string rank1 = card1[0];
+    std::string suit1 = card1[1];
+    std::string rank2 = card2[0];
+    std::string suit2 = card2[1];
+
+    std::string bestRank = "AKQJ";
+
+    if (rank1 == rank2 || (bestRank)) }
 
   /*
     Called when a round ends. Called NUM_ROUNDS times.
@@ -93,10 +102,9 @@ struct Bot {
     int myPip =
         roundState->pips[active];  // the number of chips you have contributed
                                    // to the pot this round of betting
-    int oppPip =
-        roundState
-            ->pips[1 - active];  // the number of chips your opponent has
-                                 // contributed to the pot this round of betting
+    int oppPip = roundState->pips[1 - active];  // the number of chips your
+                                                // opponent has contributed to
+                                                // the pot this round of betting
     int myStack =
         roundState->stacks[active];  // the number of chips you have remaining
     int oppStack = roundState->stacks[1 - active];  // the number of chips your
@@ -115,8 +123,8 @@ struct Bot {
     std::array<int, 2> raiseBounds = {0, 0};
     if (legalActions.find(Action::Type::RAISE) != legalActions.end()) {
       raiseBounds =
-          roundState->raiseBounds();     // the smallest and largest numbers of
-                                         // chips for a legal bet/raise
+          roundState->raiseBounds();     // the smallest and largest numbers
+                                         // of chips for a legal bet/raise
       minCost = raiseBounds[0] - myPip;  // the cost of a minimum bet/raise
       maxCost = raiseBounds[1] - myPip;  // the cost of a maximum bet/raise
     }
@@ -134,6 +142,9 @@ struct Bot {
     }
     return {Action::Type::CALL};
   }
+
+ private:
+  bool strongHole;
 };
 
 /*
