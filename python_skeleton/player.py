@@ -8,6 +8,7 @@ from skeleton.bot import Bot
 from skeleton.runner import parse_args, run_bot
 
 import random
+import eval7
 
 
 class Player(Bot):
@@ -87,6 +88,72 @@ class Player(Bot):
         if opponent_bounty_hit:
             print("Opponent hit their bounty of " + opponent_bounty_rank + "!")
 
+    def calculate_strength(self, my_cards, board_cards):
+        MC_ITER = 100
+
+        my_cards = [eval7.Card(card) for card in my_cards]
+        board_cards = [eval7.Card(card) for card in board_cards]
+
+        deck = eval7.Deck()
+
+        for card in my_cards + board_cards:
+            deck.cards.remove(card)
+
+        score = 0
+        for _ in range(MC_ITER):
+
+            deck.shuffle()
+
+            draw_number = 2 + (5 - len(board_cards))
+            draw = deck.peek(draw_number)
+
+            opp_draw = draw[:2]
+            board_draw = draw[2:]
+
+            my_hand = my_cards + board_cards + board_draw
+            opp_hand = opp_draw + board_cards + board_draw
+
+            my_value = eval7.evaluate(my_hand)
+            opp_value = eval7.evaluate(opp_hand)
+
+            if my_value > opp_value:
+                score += 1
+            elif my_value < opp_value:
+                score += 0
+            else:
+                score += 0.5
+
+        win_rate = score / MC_ITER
+
+        return win_rate
+
+    def hand_to_string(self, my_cards):
+        def rank_to_value(rank):
+            if rank == "A":
+                return 14
+            elif rank == "K":
+                return 13
+            elif rank == "Q":
+                return 12
+            elif rank == "J":
+                return 11
+            elif rank == "T":
+                return 10
+            return int(rank)
+
+        ranks = [card[0] for card in my_cards]
+        suits = [card[1] for card in my_cards]
+
+        suited = (
+            ""
+            if all(rank == ranks[0] for rank in ranks)
+            else "s"
+            if all(suit == suits[0] for suit in suits)
+            else "o"
+        )
+        sorted_ranks = sorted(ranks, key=rank_to_value, reverse=True)
+        return "".join(sorted_ranks) + suited
+
     def get_action(self, game_state, round_state, active):
         """
         Where the magic happens - your code should implement this function.
@@ -134,6 +201,9 @@ class Player(Bot):
         bluff_prob = 0.5
         fold_prob = 0.25
 
+        strength = self.calculate_strength(my_cards, board_cards)
+        pot_odds = continue_cost / (my_pip + opp_pip + 0.1)
+
         if RaiseAction in legal_actions:
             (
                 min_raise,
@@ -144,7 +214,7 @@ class Player(Bot):
 
             min_cost = min_raise - my_pip  # the cost of a minimum bet/raise
             max_cost = max_raise - my_pip  # the cost of a maximum bet/raise
-        if self.strong_hole:
+        if strength >= 2 * pot_odds:
             if RaiseAction in legal_actions:
                 for card in my_cards + board_cards:
                     if card[0] == my_bounty:
