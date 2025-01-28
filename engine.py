@@ -499,10 +499,10 @@ class Game():
         self.player_messages[1].append('D' + str(round_state.deltas[1]))
 
         # figure out win/chop, bounty hit, and update logs accordingly
-        # if round_state.bounty_hits[0]:
-        #     self.log.append('{} hits their bounty'.format(players[0].name))
-        # if round_state.bounty_hits[1]:
-        #     self.log.append('{} hits their bounty'.format(players[1].name))
+        if round_state.bounty_hits[0]:
+            self.log.append('{} hits their bounty'.format(players[0].name))
+        if round_state.bounty_hits[1]:
+            self.log.append('{} hits their bounty'.format(players[1].name))
 
         hit_chars = ['0', '0']
         if round_state.bounty_hits[0]:
